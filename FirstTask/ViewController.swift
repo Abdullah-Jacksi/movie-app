@@ -15,12 +15,10 @@ class ViewController: UIViewController {
     
     
     var movies : MoviesModel = MoviesModel(results: [])
-    var pageNumber : Int = 1
     var networkBrain = NetworkBrain()
        
     @IBAction func getNextPage(_ sender: Any) {
-//        pageNumber = pageNumber + 1
-//        getMoviesList ()
+        getMoreMovies ()
     }
     
     
@@ -50,7 +48,32 @@ class ViewController: UIViewController {
         
     }
 
+    func getMoreMovies () {
+        networkBrain.pageNumber = networkBrain.pageNumber + 1
+        
+        networkBrain.getMoviesList { [weak self] result  in
+            switch (result){
+            case.success(let data):
+                self?.movies = data
+                DispatchQueue.main.async {
+                    self?.collectionView.reloadData()
+                }
+            
+            case .failure(_):
+                return
+            }
+            
+        }
+    }
 
+}
+extension ViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let p = scrollView.contentOffset.y
+        if p > (collectionView.contentSize.height-100-scrollView.frame.size.height){}
+        print("buttom")
+        getMoreMovies ()
+    }
 
 }
 
@@ -70,6 +93,9 @@ extension ViewController: UICollectionViewDataSource {
         
         return cell
     }
+    
+
+    
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
@@ -93,48 +119,3 @@ extension ViewController: UICollectionViewDelegate {
   
 }
 
-
-//    private func getMoviesList (){
-//
-//        print(pageNumber)
-//        let s = "https://api.themoviedb.org/3/movie/popular?language=enUS&api_key=fd2b04342048fa2d5f728561866ad52a&page=\(pageNumber)"
-//        let url = URL(string: s)
-//
-//        guard url != nil else {
-//            print("there is an error in url")
-//            return
-//        }
-//
-//        let session = URLSession(configuration: .default)
-//
-//
-//        let task = session.dataTask(with: url! , completionHandler: { data, response, error in
-//            if  error != nil {
-//                print("there is an error in get dat \(error!.localizedDescription)")
-//                return
-//            }
-//
-//            if let safeData = data {
-//
-//                do{
-//                    let result = try JSONDecoder().decode(MoviesModel.self, from: safeData)
-////                    print(result.results)
-//
-//                    DispatchQueue.main.async{
-//                        self.movies = result;
-//
-//                        self.collectionView.reloadData()
-//                    }
-//
-//                }catch{
-//                    print("there is an error : \(error.localizedDescription)")
-//                }
-//
-//            }
-//
-//        })
-//
-//        task.resume()
-//
-//
-//    }
