@@ -1,12 +1,4 @@
-//
-//  ViewController.swift
-//  FirstTask
-//
-//  Created by abd on 31/12/2021.
-//
-
 import UIKit
-
 
 class ViewController: UIViewController {
     
@@ -15,7 +7,6 @@ class ViewController: UIViewController {
     var movies = [MovieModel]()
     var filteredMovies = [MovieModel]()
     var networkBrain = NetworkBrain()
-    private let imageCachManger = ImageCach()
     let searchControler = UISearchController()
     
     override func viewDidLoad() {
@@ -25,7 +16,6 @@ class ViewController: UIViewController {
         collectionView.delegate = self
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
         
-        //        searchControler.searchBar.delegate = self
         searchControler.searchResultsUpdater = self
         searchControler.obscuresBackgroundDuringPresentation = false
         searchControler.searchBar.placeholder = "Search for your movie"
@@ -37,6 +27,7 @@ class ViewController: UIViewController {
             case.success(let data):
                 self?.movies = data
                 DispatchQueue.main.async {
+                    
                     self?.collectionView.reloadData()
                 }
             case .failure(_):
@@ -121,6 +112,7 @@ extension ViewController : UISearchResultsUpdating{
                 filteredMovies.append(element)
             }
         }
+        
         self.collectionView.reloadData()
     }
 }
