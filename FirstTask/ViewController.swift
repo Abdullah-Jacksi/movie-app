@@ -9,113 +9,118 @@ import UIKit
 
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet var textFiled : UITextField!
     
-    
-    var movies : MoviesModel = MoviesModel(results: [])
+    var movies = [MovieModel]()
+    var filteredMovies = [MovieModel]()
     var networkBrain = NetworkBrain()
-       
-    @IBAction func getNextPage(_ sender: Any) {
-        getMoreMovies ()
-    }
-    
+    private let imageCachManger = ImageCach()
+    let searchControler = UISearchController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         collectionView.register(MyCollectionViewCell.nib(), forCellWithReuseIdentifier: MyCollectionViewCell.identifier)
-        
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
         
+        //        searchControler.searchBar.delegate = self
+        searchControler.searchResultsUpdater = self
+        searchControler.obscuresBackgroundDuringPresentation = false
+        searchControler.searchBar.placeholder = "Search for your movie"
+        navigationItem.searchController = searchControler
+        searchControler.searchBar.enablesReturnKeyAutomatically = false
         
-        networkBrain.getMoviesList { [weak self] result in
-            switch (result){
+        networkBrain.getMoviesList { [weak self] res in
+            switch (res){
             case.success(let data):
                 self?.movies = data
                 DispatchQueue.main.async {
                     self?.collectionView.reloadData()
                 }
-            
             case .failure(_):
                 return
             }
-            
         }
-        
     }
-
+    
     func getMoreMovies () {
         networkBrain.pageNumber = networkBrain.pageNumber + 1
-        
-        networkBrain.getMoviesList { [weak self] result  in
-            switch (result){
+        networkBrain.getMoviesList { [weak self] res  in
+            switch (res){
             case.success(let data):
-                self?.movies = data
+                self?.movies.append(contentsOf: data)
                 DispatchQueue.main.async {
                     self?.collectionView.reloadData()
                 }
-            
             case .failure(_):
                 return
             }
-            
         }
     }
-
-}
-extension ViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let p = scrollView.contentOffset.y
-        if p > (collectionView.contentSize.height-100-scrollView.frame.size.height){}
-        print("buttom")
-        getMoreMovies ()
-    }
-
 }
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        print(self.movies.results.count)
-        
-        return movies.results.count
+        //        imageCachManger.imageKeys.count
+        if self.searchControler.isActive {
+            return self.filteredMovies.count
+        }else{
+            return self.movies.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyCollectionViewCell.identifier, for: indexPath) as! MyCollectionViewCell
-        
-//        print(self.movies.results.count)
-
-        cell.setup(with: movies.results[indexPath.row])
-        
+        if self.searchControler.isActive {
+            cell.setup(with: filteredMovies[indexPath.row])
+        } else {
+            cell.setup(with: movies[indexPath.row])
+            
+        }
         return cell
     }
-    
-
-    
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        print(self.movies.results.count)
         return CGSize(width: view.frame.width/2 - 5, height: 300)
     }
 }
 
 extension ViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-              
-        let vc = storyboard?.instantiateViewController(identifier: "MovieView") as! MovieDetailViewController
-        
-        vc.id = movies.results[indexPath.row].id
-        vc.modalPresentationStyle = .automatic
-        
-        present(vc, animated: true)
-
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if(indexPath.row == movies.count - 2){
+            getMoreMovies ()
+        }
     }
-  
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = storyboard?.instantiateViewController(identifier: "MovieView") as! MovieDetailViewController
+        vc.name = movies[indexPath.row].title
+        vc.overview = movies[indexPath.row].overview
+        vc.image = movies[indexPath.row].poster_path
+        vc.vote_count = movies[indexPath.row].vote_count
+        vc.modalPresentationStyle = .automatic
+        present(vc, animated: true)
+    }
 }
 
+
+extension ViewController : UISearchResultsUpdating{
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else{
+            return
+        }
+        print(text)
+        filteredMovies.removeAll()
+        
+        for (_, element) in movies.enumerated() {
+            if(element.title.lowercased().contains(text.lowercased())){
+                filteredMovies.append(element)
+            }
+        }
+        self.collectionView.reloadData()
+    }
+}

@@ -18,6 +18,7 @@
 		2C89F929278C375A00110D4D /* MyCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C89F927278C375A00110D4D /* MyCollectionViewCell.xib */; };
 		2CA45F30278D77C00081FA76 /* MoviesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA45F2F278D77C00081FA76 /* MoviesModel.swift */; };
 		2CA45F32278D7F6F0081FA76 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA45F31278D7F6F0081FA76 /* MovieDetailViewController.swift */; };
+		2CAC852E2794CF3A00222C8C /* ImageCach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAC852D2794CF3A00222C8C /* ImageCach.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		2C89F927278C375A00110D4D /* MyCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyCollectionViewCell.xib; sourceTree = "<group>"; };
 		2CA45F2F278D77C00081FA76 /* MoviesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesModel.swift; sourceTree = "<group>"; };
 		2CA45F31278D7F6F0081FA76 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
+		2CAC852D2794CF3A00222C8C /* ImageCach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCach.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				2C89F927278C375A00110D4D /* MyCollectionViewCell.xib */,
 				2CA45F2F278D77C00081FA76 /* MoviesModel.swift */,
 				2C19A185278EBBA90079C0E9 /* NetworkBrain.swift */,
+				2CAC852D2794CF3A00222C8C /* ImageCach.swift */,
 			);
 			path = FirstTask;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 				2C222DF4277F052C00830E6E /* ViewController.swift in Sources */,
 				2C222DF0277F052C00830E6E /* AppDelegate.swift in Sources */,
 				2CA45F30278D77C00081FA76 /* MoviesModel.swift in Sources */,
+				2CAC852E2794CF3A00222C8C /* ImageCach.swift in Sources */,
 				2C89F928278C375A00110D4D /* MyCollectionViewCell.swift in Sources */,
 				2CA45F32278D7F6F0081FA76 /* MovieDetailViewController.swift in Sources */,
 				2C222DF2277F052C00830E6E /* SceneDelegate.swift in Sources */,
