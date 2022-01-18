@@ -63,6 +63,7 @@ extension ViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyCollectionViewCell.identifier, for: indexPath) as! MyCollectionViewCell
         if self.searchControler.isActive {
             cell.setup(with: filteredMovies[indexPath.row])
@@ -88,11 +89,9 @@ extension ViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = storyboard?.instantiateViewController(identifier: "MovieView") as! MovieDetailViewController
-        vc.name = movies[indexPath.row].title
-        vc.overview = movies[indexPath.row].overview
-        vc.image = movies[indexPath.row].poster_path
-        vc.vote_count = movies[indexPath.row].vote_count
+        let vc = storyboard?.instantiateViewController(identifier: "MovieDetailScrollingViewController") as! MovieDetailScrollingViewController
+        
+        vc.MyMovieModel = movies[indexPath.row]
         vc.modalPresentationStyle = .automatic
         present(vc, animated: true)
     }

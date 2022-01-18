@@ -8,20 +8,20 @@
 import UIKit
 
 class MovieDetailViewController: UIViewController {
-    
+
     @IBOutlet var myImage : UIImageView!
     @IBOutlet var mytitle : UILabel!
     @IBOutlet var myDescription : UILabel!
     @IBOutlet var myVoteCount : UILabel!
-    
+
     var name : String!
     var overview : String!
     var vote_count : Int!
     var image : String!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         guard let url = URL(string: "https://image.tmdb.org/t/p/w200\(image!)") else { return  }
         let imageData = try? Data(contentsOf: url)
         myImage.image = UIImage(data: imageData!)
